@@ -14,16 +14,40 @@ jsPsych.plugins["poldrack-single-stim"] = (function() {
 
   var plugin = {};
 
-  // FIXME
+  // FIXME: Is this still required for image stimuli?
   //jsPsych.pluginAPI.registerPreload('poldrack-single-stim', 'stimulus', 'image');
 
+  plugin.info = {
+    name: 'poldrack-single-stim',
+    parameters: {
+      stimulus: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: undefined
+      },
+      is_html: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        default: undefined
+      },
+      choices: {
+        type: jsPsych.plugins.parameterType.STRING,
+        default: undefined
+      },
+      timing_response: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 180000
+      },
+      timing_post_trial: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 0
+      },
+      timing_stim: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 0
+      }
+    }
+  }
+
   plugin.trial = function(display_element, trial) {
-
-    // if any trial variables are functions
-    // this evaluates the function and replaces
-    // it with the output of the function
-    trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
-
     // set default values for the parameters
     trial.choices = trial.choices || [];
     trial.response_ends_trial = (typeof trial.response_ends_trial == 'undefined') ? false : trial.response_ends_trial;
@@ -38,17 +62,16 @@ jsPsych.plugins["poldrack-single-stim"] = (function() {
     var setTimeoutHandlers = [];
 
     // display stimulus
+    var e;
     if (!trial.is_html) {
-      display_element.append($('<img>', {
-        src: trial.stimulus,
-        id: 'jspsych-poldrack-single-stim-stimulus'
-      }));
+      e = document.createElement('img');
+      e.setAttribute("src", trial.stimulus);
     } else {
-      display_element.append($('<div>', {
-        html: trial.stimulus,
-        id: 'jspsych-poldrack-single-stim-stimulus'
-      }));
+      e = document.createElement('div');
+      e.innerHTML = trial.stimulus;
     }
+    e.setAttribute('id', 'jspsych-poldrack-categorize-stimulus');
+    display_element.append(e);
 
     //show prompt if there is one
     if (trial.prompt !== "") {
@@ -100,7 +123,7 @@ jsPsych.plugins["poldrack-single-stim"] = (function() {
       //jsPsych.data.write(trial_data);
 
       // clear the display
-      display_element.html('');
+      display_element.innerHTML = '';
 
       // move on to the next trial
       jsPsych.finishTrial(trial_data);

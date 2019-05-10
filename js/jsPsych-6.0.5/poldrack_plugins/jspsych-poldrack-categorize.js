@@ -12,10 +12,71 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
 
   var plugin = {};
 
+  // FIXME: Is this still required for image stimuli?
   //jsPsych.pluginAPI.registerPreload('animation', 'stimulus', 'image');
 
-  plugin.trial = function(display_element, trial) {
+  plugin.info = {
+    name: 'poldrack-categorize',
+    parameters: {
+      stimulus: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: undefined
+      },
+      key_answer: {
+        type: jsPsych.plugins.parameterType.KEYCODE,
+        default: undefined
+      },
+      is_html: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        default: true
+      },
+      correct_text: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: undefined
+      },
+      incorrect_text: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: undefined
+      },
+      timeout_message: {
+        type: jsPsych.plugins.parameterType.HTML_STRING,
+        default: undefined
+      },
+      choices: {
+        type: jsPsych.plugins.parameterType.KEYCODE,
+        array: true,
+        pretty_name: 'Choices',
+        default: jsPsych.ALL_KEYS,
+        description: 'The keys the subject is allowed to press to respond to the stimulus.'
+      },
+      timing_feedback_duration: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 0
+      },
+      show_stim_with_feedback: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        default: false
+      },
+      response_ends_trial: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        default: false
+      },      
+      timing_response: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 180000
+      },
+      timing_post_trial: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 0
+      },
+      timing_stim: {
+        type: jsPsych.plugins.parameterType.INT,
+        default: 0
+      }
+    }
+  }
 
+  plugin.trial = function(display_element, trial) {
     // default parameters
     trial.text_answer = (typeof trial.text_answer === 'undefined') ? "" : trial.text_answer;
     trial.correct_text = (typeof trial.correct_text === 'undefined') ? "<p class='feedback'>Correct</p>" : trial.correct_text;
@@ -33,29 +94,22 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
     trial.timing_feedback_duration = trial.timing_feedback_duration || 2000;
     trial.timing_post_trial = (typeof trial.timing_post_trial === 'undefined') ? 1000 : trial.timing_post_trial;
 
-    // if any trial variables are functions
-    // this evaluates the function and replaces
-    // it with the output of the function
-    trial = jsPsych.pluginAPI.evaluateFunctionParameters(trial);
 
     // this array holds handlers from setTimeout calls
     // that need to be cleared if the trial ends early
     var setTimeoutHandlers = [];
 
+    var e;
     if (!trial.is_html) {
-      // add image to display
-      display_element.append($('<img>', {
-        "src": trial.stimulus,
-        "class": 'jspsych-poldrack-categorize-stimulus',
-        "id": 'jspsych-poldrack-categorize-stimulus'
-      }));
+      e = document.createElement('img');
+      e.setAttribute("src", trial.stimulus);
     } else {
-      display_element.append($('<div>', {
-        "id": 'jspsych-poldrack-categorize-stimulus',
-        "class": 'jspsych-poldrack-categorize-stimulus',
-        "html": trial.stimulus
-      }));
+      e = document.createElement('div');
+      e.innerHTML = trial.stimulus;
     }
+    e.setAttribute('id', 'jspsych-poldrack-categorize-stimulus');
+    e.setAttribute('class', 'jspsych-poldrack-categorize-stimulus');
+    display_element.append(e);
 
     // hide image after time if the timing parameter is set
     if (trial.timing_stim > 0) {
@@ -121,7 +175,7 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
 
       // if response ends trial display feedback immediately
       if (trial.response_ends_trial || info.rt == -1) {
-        display_element.html('');
+        display_element.innerHTML = '';
         doFeedback(correct, timeout);
       // otherwise wait until timing_response is reached
       } else {
@@ -135,7 +189,7 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
         }
         else {
           setTimeout(function() {
-            display_element.html('');
+            display_element.innerHTML = '';
             doFeedback(correct, timeout);
           }, trial.timing_response - info.rt);
         }
@@ -160,28 +214,22 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
     }
 
     function doFeedback(correct, timeout) {
-
       if (timeout && !trial.show_feedback_on_timeout) {
-        display_element.append(trial.timeout_message);
+        display_element.innerHTML = trial.timeout_message;
       } else {
         // show image during feedback if flag is set
-        if (trial.show_stim_with_feedback) {
-          if (!trial.is_html) {
-            // add image to display
-            display_element.append($('<img>', {
-              "src": trial.stimulus,
-              "class": 'jspsych-poldrack-categorize-stimulus',
-              "id": 'jspsych-poldrack-categorize-stimulus'
-            }));
-          } else {
-            display_element.append($('<div>', {
-              "id": 'jspsych-poldrack-categorize-stimulus',
-              "class": 'jspsych-poldrack-categorize-stimulus',
-              "html": trial.stimulus
-            }));
-          }
+        var e;
+        if (!trial.is_html) {
+          e = document.createElement('img');
+          e.setAttribute("src", trial.stimulus);
+        } else {
+          e = document.createElement('div');
+          e.innerHTML = trial.stimulus;
         }
-
+        e.setAttribute('id', 'jspsych-poldrack-categorize-stimulus');
+        e.setAttribute('class', 'jspsych-poldrack-categorize-stimulus');
+        display_element.append(e);
+ 
         // substitute answer in feedback string.
         var atext = "";
         if (correct) {
@@ -217,7 +265,7 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
     }
 
     function endTrial() {
-      display_element.html("");
+      display_element.innerHTML = '';
       jsPsych.finishTrial(trial_data);
     }
 
