@@ -1,9 +1,10 @@
 {
-    "cognitive_atlas_task_id": "tsk_4a57abb949e27",
-    "instructions":"Respond to the stimuli on the screen, brief version.",
-    "description":"Short version of the Stroop task",
-    "url":"https://www.github.com/expfactory-experiments/stroop-5min",
+    "cognitive_atlas_task_id": "",
+    "instructions":"Respond to the stimuli on the screen.",
+    "description":"Stroop task with high and low quantities of congruent trials.",
+    "url":"https://www.github.com/expfactory-experiments/stroop-sas",
     "contributors": [
+        "Paul Sharpe",
         "Tyler Burleigh",
         "Vanessa Sochat",
         "Ian Eisenberg",
@@ -11,10 +12,9 @@
         "Patrick Bissett",
         "Russell Poldrack"
     ],
-    "exp_id": "stroop-5min",
-    "name": "Stroop 5 minute task",
-    "reference": ["Conditions refers to congruency on each trial",
-                  "http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0057410"],
+    "exp_id": "stroop-sas",
+    "name": "Stroop Supervisory Attention System",
+    "reference": ["http://doi.apa.org/getdoi.cfm?doi=10.1037/0096-3445.132.1.47"],
     "template": "jspsych",
-    "time": 5
+    "time": 10
 }
