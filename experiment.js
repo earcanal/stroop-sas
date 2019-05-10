@@ -58,22 +58,6 @@ function assessPerformance() {
 	return(results);
 }
 
-
-function evalAttentionChecks() {
-	var check_percent = 1
-	if (run_attention_checks) {
-		var attention_check_trials = jsPsych.data.getTrialsOfType('attention-check')
-		var checks_passed = 0
-		for (var i = 0; i < attention_check_trials.length; i++) {
-			if (attention_check_trials[i].correct === true) {
-				checks_passed += 1
-			}
-		}
-		check_percent = checks_passed / attention_check_trials.length
-	}
-	return check_percent
-}
-
 var getInstructFeedback = function() {
 	return '<div class = centerbox><p class = center-block-text>' + feedback_instruct_text +
 		'</p></div>'
@@ -83,8 +67,6 @@ var getInstructFeedback = function() {
 /* Define experimental variables */
 /* ************************************ */
 // generic task variables
-var run_attention_checks = true
-var attention_check_thresh = 0.45
 var sumInstructTime = 0 //ms
 var instructTimeThresh = 0 ///in seconds
 var credit_var = 0
@@ -202,24 +184,6 @@ var exp_stage = 'practice'
 /* ************************************ */
 /* Set up jsPsych blocks */
 /* ************************************ */
-// Set up attention check node
-var attention_check_block = {
-	type: 'attention-check',
-	data: {
-		trial_id: "attention_check"
-	},
-	timing_response: 7500,
-	response_ends_trial: true,
-	timing_post_trial: 1000
-}
-
-var attention_node = {
-	timeline: [attention_check_block],
-	conditional_function: function() {
-		return run_attention_checks
-	}
-}
-
 
 /* define static blocks */
 var response_keys =
@@ -253,26 +217,15 @@ var instructions_block = {
 	show_clickable_nav: true,
 	timing_post_trial: 1000
 };
-var instructions_block2 = {
-	type: 'poldrack-instructions',
-	data: {
-		trial_id: "instruction2"
-	},
-	pages: [
-		'<div class = centerbox style="height:80vh"><p class = block-text>Place your fingers on the keyboard however is most comfortable to you. A suggested placement is shown below.</p><p><img src="recommended_finger_placement.svg" alt="Recommended finger placement diagram"></p></div>'
-	],
-	allow_keys: false,
-	show_clickable_nav: true,
-	timing_post_trial: 1000
-};
 
 var instruction_node = {
 	timeline: [feedback_instruct_block, instructions_block],
-	/* This function defines stopping criteria */
+	/* stopping criteria */
 	loop_function: function(data) {
-		for (i = 0; i < data.length; i++) {
-			if ((data[i].trial_type == 'poldrack-instructions') && (data[i].rt != -1)) {
-				rt = data[i].rt
+		values = data.values()
+		for (i = 0; i < values.length; i++) {
+			if ((values[i].trial_type == 'poldrack-instructions') && (values[i].rt != -1)) {
+				rt = values[i].rt
 				sumInstructTime = sumInstructTime + rt
 			}
 		}
@@ -411,6 +364,5 @@ for (i = 0; i < exp_len; i++) {
 		}
 	}
 	timeline.push(test_block)
-	if(i == exp_len/2) timeline.push(attention_node)
 }
 timeline.push(end_block)

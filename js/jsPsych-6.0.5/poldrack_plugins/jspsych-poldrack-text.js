@@ -65,7 +65,6 @@ jsPsych.plugins["poldrack-text"] = (function() {
       }
 
       jsPsych.finishTrial(trialdata);
-
     };
 
     var mouse_listener = function(e) {
