@@ -1,0 +1,20 @@
+{
+    "cognitive_atlas_task_id": "tsk_4a57abb949e27",
+    "instructions":"Respond to the stimuli on the screen, brief version.",
+    "description":"Short version of the Stroop task",
+    "url":"https://www.github.com/expfactory-experiments/stroop-5min",
+    "contributors": [
+        "Tyler Burleigh",
+        "Vanessa Sochat",
+        "Ian Eisenberg",
+        "Zeynep Enkavi",
+        "Patrick Bissett",
+        "Russell Poldrack"
+    ],
+    "exp_id": "stroop-5min",
+    "name": "Stroop 5 minute task",
+    "reference": ["Conditions refers to congruency on each trial",
+                  "http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0057410"],
+    "template": "jspsych",
+    "time": 5
+}

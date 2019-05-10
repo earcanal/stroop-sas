@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name="robots" content="noindex">
+    <title>Stroop</title>
+    
+<link rel='stylesheet' type='text/css' href='css/jspsych.css'>
+<link rel='stylesheet' type='text/css' href='css/default_style.css'>
+<link rel='stylesheet' type='text/css' href='css/style.css'>
+</head>
+
+<body>
+<script src='js/jquery.min.js'></script>
+<script src='js/jsPsych-6.0.5/jspsych.js'></script>
+<script src="js/jsPsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+<script src="js/jsPsych-6.0.5/plugins/jspsych-fullscreen.js"></script>
+<script src="js/jsPsych-6.0.5/plugins/jspsych-call-function.js"></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/poldrack_utils.js'></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/jspsych-poldrack-text.js'></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/jspsych-poldrack-instructions.js'></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/jspsych-attention-check.js'></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/jspsych-poldrack-single-stim.js'></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/poldrack_utils.js'></script>
+<script src='js/jsPsych-6.0.5/poldrack_plugins/jspsych-poldrack-categorize.js'></script>
+<script src='js/util.js'></script>
+<script>
+    // cf. jsPsych.getQueryString() 
+    var Debug       = $.QueryString.Debug       ? $.QueryString.Debug       : 0;
+    var participant = $.QueryString.participant ? $.QueryString.participant : null;
+</script>
+<script src='experiment.js'></script>
+
+<script>
+$( document ).ready(function() {
+    jsPsych.init({
+             timeline: timeline,
+             show_preload_progress_bar: false,
+             display_element: 'stage',
+             on_trial_finish: function(data) {
+               addID('stroop')
+             },
+             on_finish: function(data) {
+                 // serialize the data
+                 var promise = new Promise(function(resolve, reject) {
+                     var data = jsPsych.data.get().json();
+                     resolve(data);
+                 })
+                 promise.then(function(data) {
+                     $.ajax({
+                         type: "POST",
+                         url: '/save',
+                         data: { "data": data },
+                         success: function(){ document.location = "/next" },
+                         dataType: "application/json",
+                         error: function(err) {
+                             if (err.status == 200) {          // endpoint not running
+                                document.location = "/next"
+                             } else {                          // local save
+                                 jsPsych.data.get().localSave('json','stroop-sas.json');
+                            }
+                         }
+                     });
+                 })
+             }
+      });
+});
+</script>
+<div class=display_stage_background></div>
+<div id=stage class=display_stage></div>
+</body>
+</html>
