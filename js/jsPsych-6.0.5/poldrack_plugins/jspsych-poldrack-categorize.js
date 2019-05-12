@@ -218,17 +218,19 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
         display_element.innerHTML = trial.timeout_message;
       } else {
         // show image during feedback if flag is set
-        var e;
-        if (!trial.is_html) {
-          e = document.createElement('img');
-          e.setAttribute("src", trial.stimulus);
-        } else {
-          e = document.createElement('div');
-          e.innerHTML = trial.stimulus;
+        if (trial.show_stim_with_feedback) {
+          var e;
+          if (!trial.is_html) {
+            e = document.createElement('img');
+            e.setAttribute("src", trial.stimulus);
+          } else {
+            e = document.createElement('div');
+            e.innerHTML = trial.stimulus;
+          }
+          e.setAttribute('id', 'jspsych-poldrack-categorize-stimulus');
+          e.setAttribute('class', 'jspsych-poldrack-categorize-stimulus');
+          display_element.append(e);
         }
-        e.setAttribute('id', 'jspsych-poldrack-categorize-stimulus');
-        e.setAttribute('class', 'jspsych-poldrack-categorize-stimulus');
-        display_element.append(e);
  
         // substitute answer in feedback string.
         var atext = "";
@@ -239,11 +241,11 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
         }
 
         // show the feedback
-        display_element.append(atext);
+        display_element.innerHTML = atext;
       }
+
       // check if force correct button press is set
       if (trial.force_correct_button_press && correct === false && ((timeout && trial.show_feedback_on_timeout) || !timeout)) {
-
         var after_forced_response = function(info) {
           endTrial();
         }
@@ -261,7 +263,6 @@ jsPsych.plugins["poldrack-categorize"] = (function() {
           endTrial();
         }, trial.timing_feedback_duration);
       }
-
     }
 
     function endTrial() {
