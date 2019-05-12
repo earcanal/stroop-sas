@@ -129,14 +129,14 @@ Sample html: <div class = centerbox><div class = img-container><img...></img></d
 
 /* Used for positioning during instructions */
 
-.jspsych-instructions-nav {
+.jspsych-instructions-nav, .instructions {
   text-align: center;
   margin-top: 50px;
   position: relative;
   z-index: 1;
 }
 
-.jspsych-instructions-nav p {
+.jspsych-instructions-nav p, .instructions p {
   font-family: 'Roboto' serif;
   font-size: 20px;
   line-height: 20px;
