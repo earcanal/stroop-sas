@@ -1,182 +1,58 @@
 /* ************************************ */
-/* Define helper functions */
-/* ************************************ */
-function assessPerformance() {
-	var experiment_data = jsPsych.data.get().filter({trial_type: 'poldrack-categorize'}).values()
-	var missed_count = 0
-	var trial_count = 0
-	var correct_count = 0
-	var rt_array = []
-	var rt = 0
-		//record choices participants made
-	var choice_counts = {}
-	choice_counts[-1] = 0
-	for (var k = 0; k < choices.length; k++) {
-		choice_counts[choices[k]] = 0
-	}
-	for (var i = 0; i < experiment_data.length; i++) {
-		if (experiment_data[i].possible_responses != 'none') {
-			trial_count += 1
-			rt = experiment_data[i].rt
-			key = experiment_data[i].key_press
-			correct = experiment_data[i].correct
-			choice_counts[key] += 1
-			if(correct) correct_count += 1
-			if (rt == -1) {
-				missed_count += 1
-			} else {
-				rt_array.push(rt)
-			}
-		}
-	}
-	//calculate average rt
-	var avg_rt = -1
-	if (rt_array.length !== 0) {
-		avg_rt = math.median(rt_array)
-	} 
-	//calculate whether response distribution is okay
-	var responses_ok = true
-	Object.keys(choice_counts).forEach(function(key, index) {
-		if (choice_counts[key] > trial_count * 0.85) {
-			responses_ok = false
-		}
-	})
-	var missed_pct = missed_count/trial_count
-	var accuracy = correct_count/trial_count
-	
-	credit_var = (missed_pct < 0.4 && avg_rt > 200 && responses_ok && accuracy > 0.6)
-	jsPsych.data.addDataToLastTrial({"credit_var": credit_var})
-	
-	results = {
-			missed_pct: missed_pct, 
-			accuracy: accuracy, 
-			credit_var: credit_var
-			};
-	
-	return(results);
-}
-
-var getInstructFeedback = function() {
-	return '<div class = centerbox><p class = center-block-text>' + feedback_instruct_text +
-		'</p></div>'
-}
-
-/* ************************************ */
-/* Define experimental variables */
+/* Experimental variables */
 /* ************************************ */
 // generic task variables
-var sumInstructTime = 0 //ms
+var sumInstructTime    = 0 //ms
 var instructTimeThresh = 0 ///in seconds
-var credit_var = 0
+var credit_var         = 0
 
-/*
-/* High contrast, color-blind safe colors
-/*	RED = #f64747
-/*	BLUE = #00bfff
-/*	YELLOW = #F1F227
-*/
 
-// task specific variables
-var congruent_stim = [{
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#f64747">RED</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'congruent',
-		stim_color: 'red',
-		stim_word: 'red',
-		correct_response: 86 // V
-	},
-	key_answer: 86
-}, {
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#00bfff">BLUE</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'congruent',
-		stim_color: 'blue',
-		stim_word: 'blue',
-		correct_response: 66 // B
-	},
-	key_answer: 66
-},{
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#F1F227">YELLOW</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'congruent',
-		stim_color: 'yellow',
-		stim_word: 'yellow',
-		correct_response: 78 // N
-	},
-	key_answer: 78
-}];
+var getInstructFeedback = function() {
+	return '<div class = centerbox><p class = center-block-text>' + feedback_instruct_text + '</p></div>'
+}
 
-var incongruent_stim = [{
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#f64747">BLUE</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'incongruent',
-		stim_color: 'red',
-		stim_word: 'blue',
-		correct_response: 86
+// High contrast, color-blind safe colors
+var stimuli = [
+	{
+		colour: 'red',
+		neutral: 'jkm',
+		hex: '#f64747',
+		key: 86 // V
 	},
-	key_answer: 86
-}, {
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#f64747">YELLOW</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'incongruent',
-		stim_color: 'red',
-		stim_word: 'yellow',
-		correct_response: 86
+	{
+		colour: 'blue',
+		neutral: 'xtqz',
+		hex: '#00bfff',
+		key: 66 // B
 	},
-	key_answer: 86
-}, {
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#00bfff">RED</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'incongruent',
-		stim_color: 'blue',
-		stim_word: 'red',
-		correct_response: 66
-	},
-	key_answer: 66
-}, {
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#00bfff">YELLOW</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'incongruent',
-		stim_color: 'blue',
-		stim_word: 'yellow',
-		correct_response: 66
-	},
-	key_answer: 66
-}, {
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#F1F227">RED</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'incongruent',
-		stim_color: 'yellow',
-		stim_word: 'red',
-		correct_response: 78
-	},
-	key_answer: 78
-}, {
-	stimulus: '<div class = centerbox><div class = stroop-stim style = "font-weight:bold;color:#F1F227">BLUE</div></div>',
-	data: {
-		trial_id: 'stim',
-		condition: 'incongruent',
-		stim_color: 'yellow',
-		stim_word: 'blue',
-		correct_response: 78
-	},
-	key_answer: 78
-}];
+	{
+		colour: 'yellow',
+		neutral: 'fpstw',
+		hex: '#f1f227',
+		key: 78 // N
+	}	
+];
+
+congruent_stim   = makeCongruentStimuli(stimuli);   // 3 words * 1 colour  = 3
+incongruent_stim = makeIncongruentStimuli(stimuli); // 3 words * 2 colours = 6
+neutral_stim     = makeNeutralStimuli(stimuli);     // 3 words * 3 colours = 9
+
 // High proportion congruency: twice as many congruent as incongruent
-var stims = [].concat(congruent_stim, congruent_stim, congruent_stim, congruent_stim, incongruent_stim)
+//var stims = [].concat(congruent_stim, congruent_stim, congruent_stim, congruent_stim, incongruent_stim)
+var stims = [].concat(congruent_stim, neutral_stim, incongruent_stim)
 var practice_len = 18
-var practice_stims = jsPsych.randomization.repeat(stims, practice_len / 18, true)
+var practice_stims = jsPsych.randomization.repeat(stims, 1, true)
 
-var exp_len   = test_trials || 72;
-var test_stims = jsPsych.randomization.repeat(stims, exp_len / 18, true)
+test_trials = 288;
+// 36 critical trials of each type
+stims = [].concat(Array(12).fill(congruent_stim).flat(), Array(6).fill(incongruent_stim).flat(), Array(4).fill(neutral_stim).flat());
+stims.forEach((item, index) => {
+  item.data.critical = true;
+});
+filler = Array((test_trials - stims.length) / congruent_stim.length).fill(congruent_stim).flat()
+var test_stims = jsPsych.randomization.repeat([].concat(stims, filler), 1, true)
+//var exp_len   = test_trials || 72;
+//var test_stims = jsPsych.randomization.repeat(stims, exp_len / 18, true)
 var choices = [66, 78, 86]
 var exp_stage = 'practice'
 
@@ -304,8 +180,8 @@ if (! (Debug & 2) ) {
 }
 
 timeline.push(instruction_node)
+/*
 timeline.push(start_practice_block)
-	/* define test trials */
 for (i = 0; i < practice_len; i++) {
 	timeline.push(fixation_block)
 	var practice_block = {
@@ -334,10 +210,11 @@ for (i = 0; i < practice_len; i++) {
 	}
 	timeline.push(practice_block)
 }
+*/
 
+// make test block
 timeline.push(start_test_block)
-	/* define test trials */
-for (i = 0; i < exp_len; i++) {
+for (i = 0; i < test_trials; i++) {
 	timeline.push(fixation_block)
 	var test_block = {
 		type: 'poldrack-categorize',
@@ -345,9 +222,9 @@ for (i = 0; i < exp_len; i++) {
 		data: test_stims.data[i],
 		key_answer: test_stims.key_answer[i],
 		is_html: true,
-		correct_text: '<div class = fb_box><div class = center-text><font size = 20>correct</font></div></div>',
-		incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>WRONG!</font></div></div>',
-		timeout_message: '<div class = fb_box><div class = center-text><font size = 20>GO FASTER!</font></div></div>',
+		correct_text: '<div class = fb_box><div class = center-text><font size=20>correct</font></div></div>',
+		incorrect_text: '<div class = fb_box><div class = center-text><font size=20>WRONG!</font></div></div>',
+		timeout_message: '<div class = fb_box><div class = center-text><font size=20>GO FASTER!</font></div></div>',
 		choices: choices,
 		timing_response: 1500,
 		timing_stim: -1,
@@ -364,4 +241,134 @@ for (i = 0; i < exp_len; i++) {
 	}
 	timeline.push(test_block)
 }
+
 timeline.push(end_block)
+
+/* ************************************ */
+/* helper functions */
+/* ************************************ */
+
+function makeCongruentStimuli(stimuli) {
+	var config = [];
+	stimuli.forEach((word, i) => {
+		stimuli.forEach((colour, j) => {
+			if (word == colour) {
+				var stim = {
+					stimulus: '<div class=centerbox><div class=stroop-stim style="font-weight:bold;color:' + colour.hex + '">' + word.colour.toUpperCase() + '</div></div>',
+					data: {
+						trial_id: 'stim',
+						condition: 'congruent',
+						stim_color: colour.colour,
+						stim_word: word.colour,
+						correct_response: colour.key,
+						critical: false
+					},
+					key_answer: colour.key
+				}
+				config.push(stim);
+			}
+		});
+	});
+	return(config);
+}
+
+function makeIncongruentStimuli(stimuli) {
+	var config = [];
+	stimuli.forEach((word, i) => {
+		stimuli.forEach((colour, j) => {
+			if (word !== colour) {
+				var stim = {
+					stimulus: '<div class=centerbox><div class=stroop-stim style="font-weight:bold;color:' + colour.hex + '">' + word.colour.toUpperCase() + '</div></div>',
+					data: {
+						trial_id: 'stim',
+						condition: 'incongruent',
+						stim_color: colour.colour,
+						stim_word: word.colour,
+						correct_response: colour.key,
+						critical: false
+					},
+					key_answer: colour.key
+				}
+				config.push(stim);
+			}
+		});
+	});
+	return(config);
+}
+
+function makeNeutralStimuli(stimuli) {
+	var config = [];
+	stimuli.forEach((word, i) => {
+		stimuli.forEach((colour, j) => {
+			var stim = {
+				stimulus: '<div class=centerbox><div class=stroop-stim style="font-weight:bold;color:' + colour.hex + '">' + word.neutral.toUpperCase() + '</div></div>',
+				data: {
+					trial_id: 'stim',
+					condition: 'neutral',
+					stim_color: colour.colour,
+					stim_word: word.neutral,
+					correct_response: colour.key,
+					critical: false
+				},
+				key_answer: colour.key
+			}
+			config.push(stim);
+		});
+	});
+	return(config);
+}
+
+function assessPerformance() {
+	var experiment_data = jsPsych.data.get().filter({trial_type: 'poldrack-categorize'}).values()
+	var missed_count = 0
+	var trial_count = 0
+	var correct_count = 0
+	var rt_array = []
+	var rt = 0
+		//record choices participants made
+	var choice_counts = {}
+	choice_counts[-1] = 0
+	for (var k = 0; k < choices.length; k++) {
+		choice_counts[choices[k]] = 0
+	}
+	for (var i = 0; i < experiment_data.length; i++) {
+		if (experiment_data[i].possible_responses != 'none') {
+			trial_count += 1
+			rt = experiment_data[i].rt
+			key = experiment_data[i].key_press
+			correct = experiment_data[i].correct
+			choice_counts[key] += 1
+			if(correct) correct_count += 1
+			if (rt == -1) {
+				missed_count += 1
+			} else {
+				rt_array.push(rt)
+			}
+		}
+	}
+	//calculate average rt
+	var avg_rt = -1
+	if (rt_array.length !== 0) {
+		avg_rt = math.median(rt_array)
+	} 
+	//calculate whether response distribution is okay
+	var responses_ok = true
+	Object.keys(choice_counts).forEach(function(key, index) {
+		if (choice_counts[key] > trial_count * 0.85) {
+			responses_ok = false
+		}
+	})
+	var missed_pct = missed_count/trial_count
+	var accuracy = correct_count/trial_count
+	
+	credit_var = (missed_pct < 0.4 && avg_rt > 200 && responses_ok && accuracy > 0.6)
+	jsPsych.data.addDataToLastTrial({"credit_var": credit_var})
+	
+	results = {
+			missed_pct: missed_pct, 
+			accuracy: accuracy, 
+			credit_var: credit_var
+			};
+	
+	return(results);
+}
