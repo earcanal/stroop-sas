@@ -2,7 +2,7 @@
 /* Define helper functions */
 /* ************************************ */
 function assessPerformance() {
-	var experiment_data = jsPsych.data.getTrialsOfType('poldrack-categorize')
+	var experiment_data = jsPsych.data.get().filter({trial_type: 'poldrack-categorize'}).values()
 	var missed_count = 0
 	var trial_count = 0
 	var correct_count = 0
@@ -43,7 +43,6 @@ function assessPerformance() {
 	})
 	var missed_pct = missed_count/trial_count
 	var accuracy = correct_count/trial_count
-	var attn_correct_pct = evalAttentionChecks()
 	
 	credit_var = (missed_pct < 0.4 && avg_rt > 200 && responses_ok && accuracy > 0.6)
 	jsPsych.data.addDataToLastTrial({"credit_var": credit_var})
@@ -51,7 +50,6 @@ function assessPerformance() {
 	results = {
 			missed_pct: missed_pct, 
 			accuracy: accuracy, 
-			attn_correct_pct: attn_correct_pct, 
 			credit_var: credit_var
 			};
 	
@@ -168,17 +166,18 @@ var incongruent_stim = [{
 		condition: 'incongruent',
 		stim_color: 'yellow',
 		stim_word: 'blue',
-		correct_response: 89
+		correct_response: 78
 	},
-	key_answer: 89
+	key_answer: 78
 }];
 // High proportion congruency: twice as many congruent as incongruent
 var stims = [].concat(congruent_stim, congruent_stim, congruent_stim, congruent_stim, incongruent_stim)
 var practice_len = 18
 var practice_stims = jsPsych.randomization.repeat(stims, practice_len / 18, true)
-var exp_len = 72
+
+var exp_len   = test_trials || 72;
 var test_stims = jsPsych.randomization.repeat(stims, exp_len / 18, true)
-var choices = [66, 82, 89]
+var choices = [66, 78, 86]
 var exp_stage = 'practice'
 
 /* ************************************ */
@@ -187,7 +186,7 @@ var exp_stage = 'practice'
 
 /* define static blocks */
 var response_keys =
-	'<ul class="list-text"><li><span class = "large" style = "color:#f64747;font-weight:bold">WORD</span>: "R key"</li><li><span class = "large" style = "color:#00bfff;font-weight:bold">WORD</span>: "B key"</li><li><span class = "large" style = "color:#F1F227;font-weight:bold">WORD</span>: "Y key"</li></ul>'
+	'<ul class="list-text"><li><span class="large" style="color:#f64747;font-weight:bold">WORD</span>: "V key"</li><li><span class="large" style="color:#00bfff;font-weight:bold">WORD</span>: "B key"</li><li><span class="large" style="color:#F1F227;font-weight:bold">WORD</span>: "N key"</li></ul>'
 
 
 var feedback_instruct_text =
@@ -316,9 +315,9 @@ for (i = 0; i < practice_len; i++) {
 		data: practice_stims.data[i],
 		key_answer: practice_stims.key_answer[i],
 		is_html: true,
-		correct_text: '<div class = fb_box><div class = center-text><font size = 20>correct</font></div></div>',
-		incorrect_text: '<div class = fb_box><div class = center-text><font size = 20>WRONG!</font></div></div>',
-		timeout_message: '<div class = fb_box><div class = center-text><font size = 20>GO FASTER!</font></div></div>',
+		correct_text: '<div class=fb_box><div class=center-text><font size=20>correct</font></div></div>',
+		incorrect_text: '<div class=fb_box><div class=center-text><font size=20>WRONG!</font></div></div>',
+		timeout_message: '<div class=fb_box><div class=center-text><font size=20>GO FASTER!</font></div></div>',
 		choices: choices,
 		timing_response: 1500,
 		timing_stim: -1,

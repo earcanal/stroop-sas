@@ -12,6 +12,7 @@
 
 <body>
 <script src='js/jquery.min.js'></script>
+<script src="js/math.min.js"></script>
 <script src='js/jsPsych-6.0.5/jspsych.js'></script>
 <script src="js/jsPsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
 <script src="js/jsPsych-6.0.5/plugins/jspsych-fullscreen.js"></script>
@@ -28,6 +29,7 @@
     // cf. jsPsych.getQueryString() 
     var Debug       = $.QueryString.Debug       ? $.QueryString.Debug       : 0;
     var participant = $.QueryString.participant ? $.QueryString.participant : null;
+    var test_trials = $.QueryString.test_trials ? $.QueryString.test_trials : 72;
 </script>
 <script src='experiment.js'></script>
 
@@ -57,7 +59,7 @@ $( document ).ready(function() {
                              if (err.status == 200) {          // endpoint not running
                                 document.location = "/next"
                              } else {                          // local save
-                                 jsPsych.data.get().localSave('json','stroop-sas.json');
+                                 jsPsych.data.get().localSave('csv','stroop-sas.csv');
                             }
                          }
                      });
