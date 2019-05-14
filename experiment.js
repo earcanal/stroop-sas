@@ -82,7 +82,7 @@ var instructions_block = {
 	},
 	pages: [
 		'<div class=centerbox style="height:80vh">' +
-		'<p class=block-text>In this game you will see words (RED, BLUE, YELLOW) or non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
+		'<p class=block-text>In this game you will see words (RED, BLUE, YELLOW) and non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
 		'<p class=block-text>Your task is to press the button corresponding to the <strong><u>colour</u></strong> of the word.</p>' +
 		'<p class=block-text>Respond as <u><strong>quickly and accurately</strong></u> as possible. The response keys are as follows:</p>' +
 		response_keys + '</div>'
@@ -156,8 +156,8 @@ var start_test_block = {
 	},
 	timing_response: 180000,
 	text: '<div class=centerbox><p class=center-block-text>Well done! Now that you\'ve had some practice, let\'s play for real.</p>' +
-	'<p class=center-block-text>On some trials, you will see words which don\'t match the colour, e.g. <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>. Try to ignore the word on each trial, and press the button matching the colour. Ignore the words even if they match the colour on some (or many) trials.</p>' +
-	'<p class=center-block-text>We are only interested in trials where the word doesn\'t match the colour, but you will do better on these trials if you always try to ignore the words in favour of the colours.</p>' +
+	'<p class=center-block-text>On some trials, you will see words which don\'t match the colour, e.g. <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>. Try to <strong>ignore the word on each trial</strong>, and press the button matching the colour. Ignore the words even if they match the colour on some (or many) trials.</p>' +
+	'<p class=center-block-text>We are only interested in trials where the word doesn\'t match the colour, but you will do better on these trials if you always try to <strong>ignore the words in favour of the colours</strong>.</p>' +
 	'<p class=center-block-text>You will be observed, to ensure you don\'t look away from the word or squint your eyes during the task.</p>' +
 	'<p class=center-block-text>Remember to respond as <u><strong>quickly and accurately</strong></u> as you can.</p>' +
 	'<p class=center-block-text>The test lasts for about 10 minutes. Press <strong>enter</strong> to begin.</p></div>',
