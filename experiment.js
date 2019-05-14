@@ -1,11 +1,9 @@
-/* ************************************ */
-/* Experimental variables */
-/* ************************************ */
 // generic task variables
-var sumInstructTime    = 0 //ms
-var instructTimeThresh = 0 ///in seconds
-var credit_var         = 0
+var sumInstructTime    = 0 // ms
+var instructTimeThresh = 0 // in seconds
 
+// query string variables
+var condition = condition || 1; // 1 = 75% congruent, 2 = 0% congruent
 
 var getInstructFeedback = function() {
 	return '<div class = centerbox><p class = center-block-text>' + feedback_instruct_text + '</p></div>'
@@ -37,22 +35,34 @@ congruent_stim   = makeCongruentStimuli(stimuli);   // 3 words * 1 colour  = 3
 incongruent_stim = makeIncongruentStimuli(stimuli); // 3 words * 2 colours = 6
 neutral_stim     = makeNeutralStimuli(stimuli);     // 3 words * 3 colours = 9
 
-// High proportion congruency: twice as many congruent as incongruent
-//var stims = [].concat(congruent_stim, congruent_stim, congruent_stim, congruent_stim, incongruent_stim)
-var stims = [].concat(congruent_stim, neutral_stim, incongruent_stim)
-var practice_len = 18
-var practice_stims = jsPsych.randomization.repeat(stims, 1, true)
-
-test_trials = 288;
-// 36 critical trials of each type
-stims = [].concat(Array(12).fill(congruent_stim).flat(), Array(6).fill(incongruent_stim).flat(), Array(4).fill(neutral_stim).flat());
+// critical trials
+// 36 of each type
+stims = [].concat(Array(6).fill(incongruent_stim).flat(), Array(4).fill(neutral_stim).flat());
+if (condition == 1) { // only include congruent stimuli in 75% congruent condition
+	stims.concat(Array(12).fill(congruent_stim).flat());
+}
 stims.forEach((item, index) => {
   item.data.critical = true;
 });
-filler = Array((test_trials - stims.length) / congruent_stim.length).fill(congruent_stim).flat()
-var test_stims = jsPsych.randomization.repeat([].concat(stims, filler), 1, true)
-//var exp_len   = test_trials || 72;
-//var test_stims = jsPsych.randomization.repeat(stims, exp_len / 18, true)
+
+if (Debug == 0) { 
+	test_trials = 288
+} else {
+	test_trials = stims.length
+}
+
+// filler trials
+if (condition == 1) { // 75% congruent
+	filler = Array((test_trials - stims.length) / congruent_stim.length).fill(congruent_stim).flat()
+} else {              // 0% congruent
+	filler = Array((test_trials - stims.length) / incongruent_stim.length).fill(incongruent_stim).flat()
+}
+var test_stims = jsPsych.randomization.repeat([].concat(stims, filler), 1, true);
+
+
+// FIXME: practice_stims
+//var practice_stims = jsPsych.randomization.repeat(stims, 1, true)
+
 var choices = [66, 78, 86]
 var exp_stage = 'practice'
 
@@ -180,8 +190,11 @@ if (! (Debug & 2) ) {
 }
 
 timeline.push(instruction_node)
-/*
+
+// make practice block
 timeline.push(start_practice_block)
+
+/*
 for (i = 0; i < practice_len; i++) {
 	timeline.push(fixation_block)
 	var practice_block = {
@@ -212,41 +225,45 @@ for (i = 0; i < practice_len; i++) {
 }
 */
 
+
 // make test block
 timeline.push(start_test_block)
-for (i = 0; i < test_trials; i++) {
-	timeline.push(fixation_block)
-	var test_block = {
-		type: 'poldrack-categorize',
-		stimulus: test_stims.stimulus[i],
-		data: test_stims.data[i],
-		key_answer: test_stims.key_answer[i],
-		is_html: true,
-		correct_text: '<div class = fb_box><div class = center-text><font size=20>correct</font></div></div>',
-		incorrect_text: '<div class = fb_box><div class = center-text><font size=20>WRONG!</font></div></div>',
-		timeout_message: '<div class = fb_box><div class = center-text><font size=20>GO FASTER!</font></div></div>',
-		choices: choices,
-		timing_response: 1500,
-		timing_stim: -1,
-		timing_feedback_duration: 500,
-		show_stim_with_feedback: true,
-		response_ends_trial: true,
-		timing_post_trial: 250,
-		on_finish: function() {
-			jsPsych.data.addDataToLastTrial({
-				trial_id: 'stim',
-				exp_stage: 'test'
-			})
-		}
-	}
-	timeline.push(test_block)
-}
+makeBlock('test', test_stims)
 
 timeline.push(end_block)
 
-/* ************************************ */
-/* helper functions */
-/* ************************************ */
+
+/** functions **/
+
+function makeBlock(stage, stims) {
+	for (i = 0; i < test_trials; i++) {
+		timeline.push(fixation_block)
+		var block = {
+			type: 'poldrack-categorize',
+			stimulus: stims.stimulus[i],
+			data: stims.data[i],
+			key_answer: stims.key_answer[i],
+			is_html: true,
+			correct_text: '<div class = fb_box><div class = center-text><font size=20>correct</font></div></div>',
+			incorrect_text: '<div class = fb_box><div class = center-text><font size=20>WRONG!</font></div></div>',
+			timeout_message: '<div class = fb_box><div class = center-text><font size=20>GO FASTER!</font></div></div>',
+			choices: choices,
+			timing_response: 1500,
+			timing_stim: -1,
+			timing_feedback_duration: 500,
+			show_stim_with_feedback: true,
+			response_ends_trial: true,
+			timing_post_trial: 250,
+			on_finish: function() {
+				jsPsych.data.addDataToLastTrial({
+					trial_id: 'stim',
+					exp_stage: stage
+				})
+			}
+		}
+		timeline.push(block)
+	}
+}
 
 function makeCongruentStimuli(stimuli) {
 	var config = [];
