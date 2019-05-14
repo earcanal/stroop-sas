@@ -85,8 +85,11 @@ var instructions_block = {
 		'<div class=centerbox style="height:80vh">' +
 		'<p class=block-text>In this game you will see words (RED, BLUE, YELLOW) and non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
 		'<p class=block-text>Your task is to press the button corresponding to the <strong><u>colour</u></strong> of the word.</p>' +
-		'<p class=block-text>Respond as <u><strong>quickly and accurately</strong></u> as possible. The response keys are as follows:</p>' +
-		response_keys + '</div>'
+		'<p class=block-text>Respond as <u><strong>quickly and accurately</strong></u> as possible.</p>' +
+		'<p class=block-text>The response keys are as follows:</p>' +
+		response_keys +
+		'<p class=block-text>If your dominant hand is your right hand, V=first finger, B=second finger, N=third finger.</p>' +
+		'<p class=block-text>If your dominant hand is your left hand, V=third finger, B=second finger, N=first finger.</div>'
 	],
 	allow_keys: false,
 	show_clickable_nav: true,
