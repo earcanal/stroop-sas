@@ -73,7 +73,7 @@ var exp_stage = 'practice'
 
 /* define static blocks */
 var response_keys =
-	'<ul class="list-text"><li><span class="large" style="color:#f64747;font-weight:bold">WORD/NON-WORD</span>: press "V"</li><li><span class="large" style="color:#00bfff;font-weight:bold">WORD/NON-WORD</span>: press "B"</li><li><span class="large" style="color:#F1F227;font-weight:bold">WORD/NON-WORD</span>: press "N"</li></ul>'
+	'<ul class="list-text"><li><span class="large" style="color:#f64747;font-weight:bold">Press "V" for red WORDs or NON-WORDs</span></li><li><span class="large" style="color:#00bfff;font-weight:bold">Press "B" for blue WORDs or NON-WORDs</span></li><li><span class="large" style="color:#F1F227;font-weight:bold">Press "N" for yellow WORDs or NON-WORDs</span></li></ul>'
 
 /// This ensures that the subject does not read through the instructions too quickly.  If they do it too quickly, then we will go over the loop again.
 var instructions_block = {
@@ -83,7 +83,7 @@ var instructions_block = {
 	},
 	pages: [
 		'<div class=centerbox style="height:80vh">' +
-		'<p class=block-text>In this game you will see words (RED, BLUE, YELLOW) and non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
+		'<p class=block-text>In this task you will see words (RED, BLUE, YELLOW) and non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
 		'<p class=block-text>Your task is to press the button corresponding to the <strong><u>colour</u></strong> of the word.</p>' +
 		'<p class=block-text>Respond as <u><strong>quickly and accurately</strong></u> as possible.</p>' +
 		'<p class=block-text>The response keys are as follows:</p>' +
@@ -125,7 +125,7 @@ var end_block = {
     	exp_id: 'stroop'
 	},
 	timing_response: 180000,
-	text: '<div class = centerbox><p class = center-block-text>Thanks for playing!</p><p class = center-block-text>Press <strong>enter</strong> to continue.</p></div>',
+	text: '<div class = centerbox><p class = center-block-text>Thanks for participating!</p><p class = center-block-text>Press <strong>enter</strong> to continue.</p></div>',
 	cont_key: [13],
 	timing_post_trial: 0,
 	on_finish: assessPerformance
@@ -137,7 +137,7 @@ var start_congruent_practice_block = {
 		trial_id: "practice_contruent_intro"
 	},
 	timing_response: 180000,
-	text: '<div class = centerbox><p class = block-text>Let\'s start with a few WORD practice trials. Remember, press the key corresponding to the <strong><u>color</u></strong> of the word.</p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
+	text: '<div class = centerbox><p class = block-text>Let\'s start with a few <strong>WORD</strong> practice trials. Remember, press the key corresponding to the <strong><u>color</u></strong> of the word.</p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
 	cont_key: [13],
 	timing_post_trial: 1000
 };
@@ -148,7 +148,7 @@ var start_neutral_practice_block = {
 		trial_id: "practice_neutral_intro"
 	},
 	timing_response: 180000,
-	text: '<div class = centerbox><p class = block-text>Now let\'s practice some NON-WORD trials. Remember, press the key corresponding to the <strong><u>color</u></strong> of the non-word.</p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
+	text: '<div class = centerbox><p class = block-text>Now let\'s practice some <strong>NON-WORD</strong> trials. Remember, press the key corresponding to the <strong><u>color</u></strong> of the non-word.</p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
 	cont_key: [13],
 	timing_post_trial: 1000
 };
