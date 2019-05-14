@@ -35,10 +35,9 @@ congruent_stim   = makeCongruentStimuli(stimuli);   // 3 words * 1 colour  = 3
 incongruent_stim = makeIncongruentStimuli(stimuli); // 3 words * 2 colours = 6
 neutral_stim     = makeNeutralStimuli(stimuli);     // 3 words * 3 colours = 9
 
-// critical trials
-// 36 of each type
+// multiply up to get 36 critical trials of each stimulus type ...
 stims = [].concat(Array(6).fill(incongruent_stim).flat(), Array(4).fill(neutral_stim).flat());
-if (condition == 1) { // only include congruent stimuli in 75% congruent condition
+if (condition == 1) { // ... except there are no congruent stimuli in 0% congruent condition
 	stims.concat(Array(12).fill(congruent_stim).flat());
 }
 stims.forEach((item, index) => {
@@ -60,8 +59,9 @@ if (condition == 1) { // 75% congruent
 var test_stims = jsPsych.randomization.repeat([].concat(stims, filler), 1, true);
 
 
-// FIXME: practice_stims
-//var practice_stims = jsPsych.randomization.repeat(stims, 1, true)
+// practice_trials: 12 congruent, 36 neutral
+var practice_congruent_stims = jsPsych.randomization.repeat(Array(4).fill(congruent_stim).flat(), 1, true);
+var practice_neutral_stims   = jsPsych.randomization.repeat(Array(4).fill(neutral_stim).flat(), 1, true);
 
 var choices = [66, 78, 86]
 var exp_stage = 'practice'
@@ -72,21 +72,7 @@ var exp_stage = 'practice'
 
 /* define static blocks */
 var response_keys =
-	'<ul class="list-text"><li><span class="large" style="color:#f64747;font-weight:bold">WORD</span>: "V key"</li><li><span class="large" style="color:#00bfff;font-weight:bold">WORD</span>: "B key"</li><li><span class="large" style="color:#F1F227;font-weight:bold">WORD</span>: "N key"</li></ul>'
-
-
-var feedback_instruct_text =
-	'<div class = centerbox><p class = block-text>Let\'s play a color matching game! Focus will be important here, so before we begin please make sure you\'re ready for <u><strong>five minutes</strong></u> of uninterrupted game time!</p> <p class = block-text>Press <strong>enter</strong> to continue.</p></div>'
-var feedback_instruct_block = {
-	type: 'poldrack-text',
-	data: {
-		trial_id: "instruction"
-	},
-	cont_key: [13],
-	text: getInstructFeedback,
-	timing_post_trial: 0,
-	timing_response: 180000
-};
+	'<ul class="list-text"><li><span class="large" style="color:#f64747;font-weight:bold">WORD/NON-WORD</span>: press "V"</li><li><span class="large" style="color:#00bfff;font-weight:bold">WORD/NON-WORD</span>: press "B"</li><li><span class="large" style="color:#F1F227;font-weight:bold">WORD/NON-WORD</span>: press "N"</li></ul>'
 
 /// This ensures that the subject does not read through the instructions too quickly.  If they do it too quickly, then we will go over the loop again.
 var instructions_block = {
@@ -95,7 +81,10 @@ var instructions_block = {
 		trial_id: "instruction"
 	},
 	pages: [
-		'<div class = centerbox style="height:80vh"><p class = block-text>In this game you will see "color" words (RED, BLUE, GREEN, YELLOW) appear one at a time. The "ink" of the words also will be colored. For example, you may see: <span class = "large" style = "color:#f64747;font-weight:bold">RED</span>, <span class = "large" style = "color:#00bfff;font-weight:bold">BLUE</span> or <span class = "large" style = "color:#f64747;font-weight:bold">BLUE</span>.</p><p class = block-text>Your task is to press the button corresponding to the <strong><u>font color</u></strong> of the word. Respond as <u><strong>quickly and accurately</strong></u> as possible. The response keys are as follows:</p>' +
+		'<div class=centerbox style="height:80vh">' +
+		'<p class=block-text>In this game you will see words (RED, BLUE, YELLOW) or non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
+		'<p class=block-text>Your task is to press the button corresponding to the <strong><u>colour</u></strong> of the word.</p>' +
+		'<p class=block-text>Respond as <u><strong>quickly and accurately</strong></u> as possible. The response keys are as follows:</p>' +
 		response_keys + '</div>'
 	],
 	allow_keys: false,
@@ -104,7 +93,7 @@ var instructions_block = {
 };
 
 var instruction_node = {
-	timeline: [feedback_instruct_block, instructions_block],
+	timeline: [instructions_block],
 	/* stopping criteria */
 	loop_function: function(data) {
 		values = data.values()
@@ -138,13 +127,24 @@ var end_block = {
 	on_finish: assessPerformance
 };
 
-var start_practice_block = {
+var start_congruent_practice_block = {
 	type: 'poldrack-text',
 	data: {
-		trial_id: "practice_intro"
+		trial_id: "practice_contruent_intro"
 	},
 	timing_response: 180000,
-	text: '<div class = centerbox><p class = block-text>Let\'s start with a few practice trials. Remember, press the key corresponding to the <strong><u>font color</u></strong> of the word. </p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
+	text: '<div class = centerbox><p class = block-text>Let\'s start with a few WORD practice trials. Remember, press the key corresponding to the <strong><u>color</u></strong> of the word.</p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
+	cont_key: [13],
+	timing_post_trial: 1000
+};
+
+var start_neutral_practice_block = {
+	type: 'poldrack-text',
+	data: {
+		trial_id: "practice_neutral_intro"
+	},
+	timing_response: 180000,
+	text: '<div class = centerbox><p class = block-text>Now let\'s practice some NON-WORD trials. Remember, press the key corresponding to the <strong><u>color</u></strong> of the non-word.</p><p class = block-text></p><p class = block-text>Press <strong>enter</strong> to begin the practice.</p></div>',
 	cont_key: [13],
 	timing_post_trial: 1000
 };
@@ -155,7 +155,12 @@ var start_test_block = {
 		trial_id: "test_intro"
 	},
 	timing_response: 180000,
-	text: '<div class = centerbox><p class = center-block-text>Great job! Now that you\'ve had a bit of practice, let\'s play for real this time. Remember to respond as <u><strong>quickly and accurately</strong></u> as you can. </p><p class = center-block-text>Press <strong>enter</strong> to begin the test.</p></div>',
+	text: '<div class=centerbox><p class=center-block-text>Well done! Now that you\'ve had some practice, let\'s play for real.</p>' +
+	'<p class=center-block-text>On some trials, you will see words which don\'t match the colour, e.g. <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>. Try to ignore the word on each trial, and press the button matching the colour. Ignore the words even if they match the colour on some (or many) trials.</p>' +
+	'<p class=center-block-text>We are only interested in trials where the word doesn\'t match the colour, but you will do better on these trials if you always try to ignore the words in favour of the colours.</p>' +
+	'<p class=center-block-text>You will be observed, to ensure you don\'t look away from the word or squint your eyes during the task.</p>' +
+	'<p class=center-block-text>Remember to respond as <u><strong>quickly and accurately</strong></u> as you can.</p>' +
+	'<p class=center-block-text>The test lasts for about 10 minutes. Press <strong>enter</strong> to begin.</p></div>',
 	cont_key: [13],
 	timing_post_trial: 1000,
 	on_finish: function() {
@@ -191,37 +196,17 @@ if (! (Debug & 2) ) {
 
 timeline.push(instruction_node)
 
-// make practice block
-timeline.push(start_practice_block)
+// make practice blocks
+timeline.push(start_congruent_practice_block)
+makeBlock('practice', practice_congruent_stims)
+
+timeline.push(start_neutral_practice_block)
+makeBlock('practice', practice_neutral_stims)
 
 /*
 for (i = 0; i < practice_len; i++) {
-	timeline.push(fixation_block)
 	var practice_block = {
-		type: 'poldrack-categorize',
 		practice_trial: i,
-		stimulus: practice_stims.stimulus[i],
-		data: practice_stims.data[i],
-		key_answer: practice_stims.key_answer[i],
-		is_html: true,
-		correct_text: '<div class=fb_box><div class=center-text><font size=20>correct</font></div></div>',
-		incorrect_text: '<div class=fb_box><div class=center-text><font size=20>WRONG!</font></div></div>',
-		timeout_message: '<div class=fb_box><div class=center-text><font size=20>GO FASTER!</font></div></div>',
-		choices: choices,
-		timing_response: 1500,
-		timing_stim: -1,
-		timing_feedback_duration: 500,
-		show_stim_with_feedback: true,
-		response_ends_trial: true,
-		timing_post_trial: 250,
-		on_finish: function() {
-			jsPsych.data.addDataToLastTrial({
-				trial_id: 'stim',
-				exp_stage: 'practice'
-			})
-		}
-	}
-	timeline.push(practice_block)
 }
 */
 
@@ -235,8 +220,9 @@ timeline.push(end_block)
 
 /** functions **/
 
+// 500 + 2250 = 2750ms (max) per trial
 function makeBlock(stage, stims) {
-	for (i = 0; i < test_trials; i++) {
+	for (i = 0; i < stims.stimulus.length; i++) {
 		timeline.push(fixation_block)
 		var block = {
 			type: 'poldrack-categorize',
