@@ -6,5 +6,5 @@ Hi Friend! This is an Experiment that is friendly for use in the [Experiment Fac
 
 # Stroop Supervisory Attention System (SAS)
 
-* [demo (75% congruent)](https://earcanal.github.io/stroop-sas/?condition=1)
-* [demo (0% congruent)](https://earcanal.github.io/stroop-sas/?condition=2)
+* [demo (75% congruent)](https://earcanal.github.io/stroop-sas/?group='high')
+* [demo (0% congruent)](https://earcanal.github.io/stroop-sas/?group='low')

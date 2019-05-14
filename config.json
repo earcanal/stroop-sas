@@ -16,5 +16,5 @@
     "name": "Stroop Supervisory Attention System",
     "reference": ["http://doi.apa.org/getdoi.cfm?doi=10.1037/0096-3445.132.1.47"],
     "template": "jspsych",
-    "time": 10
+    "time": 12
 }

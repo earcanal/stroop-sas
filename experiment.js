@@ -3,7 +3,7 @@ var sumInstructTime    = 0 // ms
 var instructTimeThresh = 0 // in seconds
 
 // query string variables
-var condition = condition || 1; // 1 = 75% congruent, 2 = 0% congruent
+var group = group || 'high'; // 'high' = 75% congruent, 'low' = 0% congruent
 
 var getInstructFeedback = function() {
 	return '<div class = centerbox><p class = center-block-text>' + feedback_instruct_text + '</p></div>'
@@ -37,7 +37,7 @@ neutral_stim     = makeNeutralStimuli(stimuli);     // 3 words * 3 colours = 9
 
 // multiply up to get 36 critical trials of each stimulus type ...
 stims = [].concat(Array(6).fill(incongruent_stim).flat(), Array(4).fill(neutral_stim).flat());
-if (condition == 1) { // ... except there are no congruent stimuli in 0% congruent condition
+if (group == 'high') { // ... except there are no congruent stimuli in 0% congruent condition
 	stims.concat(Array(12).fill(congruent_stim).flat());
 }
 stims.forEach((item, index) => {
@@ -51,7 +51,7 @@ if (Debug == 0) {
 }
 
 // filler trials
-if (condition == 1) { // 75% congruent
+if (group == 'high') { // 75% congruent
 	filler = Array((test_trials - stims.length) / congruent_stim.length).fill(congruent_stim).flat()
 } else {              // 0% congruent
 	filler = Array((test_trials - stims.length) / incongruent_stim.length).fill(incongruent_stim).flat()
