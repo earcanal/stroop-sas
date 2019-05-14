@@ -38,13 +38,10 @@ neutral_stim     = makeNeutralStimuli(stimuli);     // 3 words * 3 colours = 9
 // multiply up to get 36 critical trials of each stimulus type ...
 stims = [].concat(Array(6).fill(incongruent_stim).flat(), Array(4).fill(neutral_stim).flat());
 if (group == 'high') { // ... except there are no congruent stimuli in 0% congruent condition
-	stims.concat(Array(12).fill(congruent_stim).flat());
+	stims = stims.concat(Array(12).fill(congruent_stim).flat());
 }
-stims.forEach((item, index) => {
-  item.data.critical = true;
-});
 
-if (Debug == 0) { 
+if (Debug == 0) {
 	test_trials = 288
 } else {
 	test_trials = stims.length
@@ -52,10 +49,14 @@ if (Debug == 0) {
 
 // filler trials
 if (group == 'high') { // 75% congruent
-	filler = Array((test_trials - stims.length) / congruent_stim.length).fill(congruent_stim).flat()
+	filler = Array((test_trials - stims.length) / congruent_stim.length).fill(makeCongruentStimuli(stimuli)).flat()
 } else {              // 0% congruent
-	filler = Array((test_trials - stims.length) / incongruent_stim.length).fill(incongruent_stim).flat()
+	filler = Array((test_trials - stims.length) / incongruent_stim.length).fill(makeIncongruentStimuli(stimuli)).flat()
 }
+filler.forEach((item, index) => {
+  item.data.critical = false;
+});
+
 var test_stims = jsPsych.randomization.repeat([].concat(stims, filler), 1, true);
 
 
@@ -203,14 +204,6 @@ makeBlock('practice', practice_congruent_stims)
 timeline.push(start_neutral_practice_block)
 makeBlock('practice', practice_neutral_stims)
 
-/*
-for (i = 0; i < practice_len; i++) {
-	var practice_block = {
-		practice_trial: i,
-}
-*/
-
-
 // make test block
 timeline.push(start_test_block)
 makeBlock('test', test_stims)
@@ -264,7 +257,7 @@ function makeCongruentStimuli(stimuli) {
 						stim_color: colour.colour,
 						stim_word: word.colour,
 						correct_response: colour.key,
-						critical: false
+						critical: true
 					},
 					key_answer: colour.key
 				}
@@ -288,7 +281,7 @@ function makeIncongruentStimuli(stimuli) {
 						stim_color: colour.colour,
 						stim_word: word.colour,
 						correct_response: colour.key,
-						critical: false
+						critical: true
 					},
 					key_answer: colour.key
 				}
@@ -311,7 +304,7 @@ function makeNeutralStimuli(stimuli) {
 					stim_color: colour.colour,
 					stim_word: word.neutral,
 					correct_response: colour.key,
-					critical: false
+					critical: true
 				},
 				key_answer: colour.key
 			}
