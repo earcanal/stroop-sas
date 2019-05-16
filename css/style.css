@@ -24,3 +24,19 @@
 ul li {
   text-align: left;
 }
+
+.red, .blue, .yellow {
+  font-size: 125%;
+  font-weight:bold;
+}
+.red {
+  color:#f64747;
+}
+.blue {
+  color:#00bfff;
+  font-weight:bold;
+}
+.yellow {
+  color:#F1F227;
+  font-weight:bold;
+}

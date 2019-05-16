@@ -73,7 +73,7 @@ var exp_stage = 'practice'
 
 /* define static blocks */
 var response_keys =
-	'<ul class="list-text"><li><span class="large" style="color:#f64747;font-weight:bold">Press "V" for red WORDs or NON-WORDs</span></li><li><span class="large" style="color:#00bfff;font-weight:bold">Press "B" for blue WORDs or NON-WORDs</span></li><li><span class="large" style="color:#F1F227;font-weight:bold">Press "N" for yellow WORDs or NON-WORDs</span></li></ul>'
+	'<ul class="list-text"><li><span class="red">Press "V" for red WORDs or NON-WORDs</span></li><li><span class="blue">Press "B" for blue WORDs or NON-WORDs</span></li><li><span class="yellow">Press "N" for yellow WORDs or NON-WORDs</span></li></ul>'
 
 /// This ensures that the subject does not read through the instructions too quickly.  If they do it too quickly, then we will go over the loop again.
 var instructions_block = {
@@ -83,13 +83,13 @@ var instructions_block = {
 	},
 	pages: [
 		'<div class=centerbox style="height:80vh">' +
-		'<p class=block-text>In this task you will see words (RED, BLUE, YELLOW) and non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="large" style = "color:#f64747;font-weight:bold">RED</span>, <span class="large" style="color:#f1f227;font-weight:bold">XTQZ</span>, <span class="large" style="color:#00bfff;font-weight:bold">BLUE</span> or <span class="large" style="color:#f64747;font-weight:bold">BLUE</span>.</p>' +
+		'<p class=block-text>In this task you will see words (RED, BLUE, YELLOW) and non-words (JKM, XTQZ, FPSTW) appear one at a time. The words and non-words will be coloured. For example, you may see: <span class="red">RED</span>, <span class="yellow">XTQZ</span>, <span class="blue">BLUE</span> or <span class="red">BLUE</span>.</p>' +
 		'<p class=block-text>Your task is to press the button corresponding to the <strong><u>colour</u></strong> of the word.</p>' +
 		'<p class=block-text>Respond as <u><strong>quickly and accurately</strong></u> as possible.</p>' +
 		'<p class=block-text>The response keys are as follows:</p>' +
 		response_keys +
-		'<p class=block-text>If your dominant hand is your right hand, V=first finger, B=second finger, N=third finger.</p>' +
-		'<p class=block-text>If your dominant hand is your left hand, V=third finger, B=second finger, N=first finger.</div>'
+		'<p class=block-text>If your dominant hand is your right hand, <span class="red">V</span>=first finger, <span class="blue">B</span>=second finger, <span class="yellow">N</span>=third finger.</p>' +
+		'<p class=block-text>If your dominant hand is your left hand, <span class="red">V</span>=third finger, <span class="blue">B</span>=second finger, <span class="yellow">N</span>=first finger.</div>'
 	],
 	allow_keys: false,
 	show_clickable_nav: true,
